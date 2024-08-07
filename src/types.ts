@@ -32,12 +32,15 @@ export interface IYear {
 }
 
 export interface IDataValue {
-  attributeId: number;
-  countryId: number;
-  yearId: number;
+  attribute: string;
+  attributeGroup: string;
+  units: string;
+  country: string;
+  region: string;
+  year: string;
   value: number;
 }
 
                             // attributeId, countryId, yearId, value
-export type IDataValueRow = [number, number, number, number];
+export type IRawDataValueRow = [number, number, number, number];
 
