@@ -1,8 +1,8 @@
-import { IDataValueRow } from "../types";
+import { IRawDataValueRow } from "../types";
 
 // this is the start of the obesity values that were manually stubbed in
 
-export const values: IDataValueRow[] = [
+export const rawDataValueRows: IRawDataValueRow[] = [
   [4, 49, 1, 7.81],
   [1, 49, 1, 9.56],
   [4, 49, 2, 7.22],

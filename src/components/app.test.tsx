@@ -5,7 +5,7 @@ import { render, screen } from "@testing-library/react";
 describe("test load app", () => {
   it("renders without crashing", () => {
     render(<App/>);
-    expect(screen.getByText("WHO CODAP Plugin")).toBeDefined();
+    expect(screen.getByText("WHO Data Plugin")).toBeDefined();
   });
 });
 
