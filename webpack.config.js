@@ -25,7 +25,10 @@ module.exports = (env, argv) => {
         key: path.resolve(os.homedir(), '.localhost-ssl/localhost.key'),
         cert: path.resolve(os.homedir(), '.localhost-ssl/localhost.pem'),
       },
-      allowedHosts: 'all'
+      allowedHosts: 'all',
+      client: {
+        overlay: false
+      }
     },
     devtool: devMode ? 'eval-cheap-module-source-map' : 'source-map',
     entry: './src/index.tsx',

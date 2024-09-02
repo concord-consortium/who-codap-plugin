@@ -1,0 +1,49 @@
+@import "./vars";
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+
+  & + & {
+    border-top: 1px solid #ddd;
+  }
+
+  .dropdown-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 32px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $teal-light-12;
+    }
+    &:active {
+      background-color: $teal-light-25;
+    }
+
+    .dropdown-label {
+      font-weight: 600;
+    }
+
+    .dropdown-icon {
+      svg {
+        transition: transform 0.25s ease;
+      }
+    }
+  }
+
+  & > hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    width: 100%;
+  }
+
+  .dropdown-content {
+    display: flex;
+    height: 0;
+    overflow: hidden;
+    transition: height 0.25s ease;
+  }
+}
