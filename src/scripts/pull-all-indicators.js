@@ -1,23 +1,24 @@
-const axios = require('axios');
-const fs = require('fs');
-const { Parser } = require('json2csv');
+/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, no-undef */
+const axios = require("axios");
+const fs = require("fs");
+const { Parser } = require("json2csv");
 
-const apiBaseUrl = 'https://ghoapi.azureedge.net/api/';
+const apiBaseUrl = "https://ghoapi.azureedge.net/api/";
 const endpoints = [
-  'NCD_BMI_PLUS2C',
-  'NCD_BMI_30A',
-  'NCD_GLUC_03',
-  'NCD_HYP_PREVALENCE_C',
-  'SDGPM25',
-  'AIR_5',
-  'WSH_WATER_SAFELY_MANAGED',
-  'WSH_10',
-  'WHS4_544',
-  'WHS4_543',
-  'MCV2',
-  'WHS3_62',
-  'WHS3_49',
-  'WHS3_53'
+  "NCD_BMI_PLUS2C",
+  "NCD_BMI_30A",
+  "NCD_GLUC_03",
+  "NCD_HYP_PREVALENCE_C",
+  "SDGPM25",
+  "AIR_5",
+  "WSH_WATER_SAFELY_MANAGED",
+  "WSH_10",
+  "WHS4_544",
+  "WHS4_543",
+  "MCV2",
+  "WHS3_62",
+  "WHS3_49",
+  "WHS3_53"
 ];
 
 const fetchDataAndConvertToCsv = async (endpoint) => {
@@ -49,4 +50,4 @@ const main = async () => {
 };
 
 main();
-
+/* eslint-enable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, no-undef */
