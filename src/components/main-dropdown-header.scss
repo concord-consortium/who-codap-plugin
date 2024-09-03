@@ -1,0 +1,18 @@
+@import "./vars.scss";
+
+.main-dropdown-header {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  .main-dropdown-header-counter-container {
+    margin-top: -2px;
+    margin-right: 8px;
+  }
+
+  .main-dropdown-header-names {
+    color: $teal-dark;
+  }
+}
