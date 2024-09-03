@@ -1,0 +1,17 @@
+@import "./vars.scss";
+
+.attributes-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 11px;
+
+  .attr-section-header {
+    margin: 8px 0;
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+  }
+}

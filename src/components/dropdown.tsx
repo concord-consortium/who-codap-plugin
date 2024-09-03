@@ -7,10 +7,11 @@ import "./dropdown.scss";
 
 interface IProps {
   label: string;
+  header?: React.ReactNode;
   children?: React.ReactNode;
 }
 
-export const Dropdown = ({ label, children }: IProps) => {
+export const Dropdown = ({ label, header, children }: IProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -46,6 +47,12 @@ export const Dropdown = ({ label, children }: IProps) => {
         <div className="dropdown-label">
           { label }
         </div>
+        {
+          header &&
+          <div className="dropdown-header-content">
+            { header }
+          </div>
+        }
         <div className="dropdown-icon">
           <ArrowDropDown style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
         </div>

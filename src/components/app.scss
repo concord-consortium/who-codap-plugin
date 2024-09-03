@@ -18,6 +18,11 @@
     margin: 0;
   }
 
+  .app-scroll-area {
+    overflow-y: auto;
+    max-height: 390px;
+  }
+
   .app-header {
     margin-bottom: 10px;
 
