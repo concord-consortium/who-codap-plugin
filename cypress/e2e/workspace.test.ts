@@ -6,8 +6,8 @@ context("Test the overall app", () => {
   });
 
   describe("Desktop functionalities", () => {
-    it("renders with text", () => {
-      ae.getApp().should("have.text", "Hello World");
+    it("renders Get Data button", () => {
+      ae.getApp().find("button").should("have.text", "Get Data");
     });
   });
 });

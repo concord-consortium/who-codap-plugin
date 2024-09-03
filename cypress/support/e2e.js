@@ -21,3 +21,10 @@
 
 // add code coverage support
 import "@cypress/code-coverage/support";
+
+Cypress.on("uncaught:exception", (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  // This will happen as the plugin is not run within CODAP and an error will be thrown
+  return false;
+});

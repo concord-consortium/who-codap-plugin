@@ -27,7 +27,7 @@ const yearMap = makeMap(years);
 
 export const requestData = async (options: IRequestDataOptions): Promise<IDataValue[]> => {
   return new Promise<IDataValue[]>((resolve, reject) => {
-    const {attributeIds, countryIds, allCountries, allCountriesInRegionIds, yearIds, allYears} = options;
+    const { attributeIds, countryIds, allCountries, allCountriesInRegionIds, yearIds, allYears } = options;
 
     // this will probably change to fetch a JSON file per attribute but for now we use the stubbed values
     const fetchedRows = rawDataValueRows;
