@@ -24,7 +24,7 @@
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css|less|sass)$": "identity-obj-proxy"
+      "\\.(css|scss|less|sass)$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
       "ts",
@@ -45,7 +45,7 @@
     "lint:build": "eslint -c \".eslintrc.build.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./cypress/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx}\" \"./cypress/**/*.{js,jsx,ts,tsx}\"",
     "lint:style": "eslint -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./cypress/**/*.{js,jsx,ts,tsx}\"",
-    "lint:style:fix": "eslint -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./cypress/**/*.{js,jsx,ts,tsx}\"",
+    "lint:style:fix": "eslint --fix -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./cypress/**/*.{js,jsx,ts,tsx}\"",
     "serve:top-test": "npx http-server top-test",
     "test": "jest",
     "test:all": "npm-run-all build test start",
@@ -133,6 +133,7 @@
     "webpack-dev-server": "^4.15.0"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tslib": "^2.5.2"
