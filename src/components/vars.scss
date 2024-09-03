@@ -7,3 +7,15 @@ $teal-light-50: rgba(#72bfca, 0.50);
 $teal-light-25: rgba(#72bfca, 0.25);
 $teal-light-12: rgba(#72bfca, 0.12);
 $text-color: #222;
+
+
+@mixin section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 11px;
+}
+
+@mixin section-header {
+  margin: 8px 0;
+}

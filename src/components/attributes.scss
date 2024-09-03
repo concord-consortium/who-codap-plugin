@@ -1,13 +1,10 @@
 @import "./vars.scss";
 
 .attributes-section {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0 11px;
+  @include section;
 
   .attr-section-header {
-    margin: 8px 0;
+    @include section-header;
   }
 
   .checkbox-group {

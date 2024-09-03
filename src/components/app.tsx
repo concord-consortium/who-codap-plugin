@@ -3,7 +3,8 @@ import { initializePlugin } from "@concord-consortium/codap-plugin-api";
 import { Dropdown } from "./dropdown";
 import { MainDropdownHeader } from "./main-dropdown-header";
 import { Attributes } from "./attributes";
-import { IAttribute } from "../types";
+import { Countries } from "./countries";
+import { IAttribute, ICountry } from "../types";
 
 import InfoIcon from "../assets/info.svg";
 
@@ -19,6 +20,7 @@ const kInitialDimensions = {
 
 export const App = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<IAttribute[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<ICountry[]>([]);
 
   useEffect(() => {
     initializePlugin({ pluginName: kPluginName, version: kVersion, dimensions: kInitialDimensions });
@@ -37,8 +39,8 @@ export const App = () => {
         <Dropdown label="Attributes" header={<MainDropdownHeader selectedNames={selectedAttributes.map(a => a.name)} />}>
           <Attributes selectedAttributes={selectedAttributes} setSelectedAttributes={setSelectedAttributes} />
         </Dropdown>
-        <Dropdown label="Countries">
-          TODO
+        <Dropdown label="Countries" header={<MainDropdownHeader selectedNames={selectedCountries.map(c => c.name)} />}>
+          <Countries selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries} />
         </Dropdown>
         <Dropdown label="Years">
           TODO
