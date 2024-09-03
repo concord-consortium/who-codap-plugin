@@ -1,0 +1,25 @@
+@import "./vars.scss";
+
+.countries-section {
+  @include section;
+
+  .countries-section-header {
+    @include section-header;
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .all-countries-checkbox-container {
+      background-color: rgba(0, 0, 0, 0.07);
+      width: 100%;
+    }
+
+    .checkbox-container {
+      width: 157px;
+    }
+  }
+}

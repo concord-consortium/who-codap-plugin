@@ -14,8 +14,8 @@ interface IProps {
 export const Checkbox = ({ label, checked, onChange }: IProps) => {
   return (
     <div className="checkbox" onClick={onChange}>
-      { checked ? <CheckboxChecked /> : <CheckboxOutline /> }
-      { label }
+      <div className="checkbox-icon">{ checked ? <CheckboxChecked /> : <CheckboxOutline /> }</div>
+      <div className="checkbox-label">{ label }</div>
     </div>
   );
 };

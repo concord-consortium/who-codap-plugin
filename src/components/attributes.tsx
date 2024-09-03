@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown } from "./dropdown";
 import { Checkbox } from "./checkbox";
 import { Counter } from "./counter";
-import { attributes } from "../data/selectors";
+import { attributeGroups, attributes } from "../data/selectors";
 import { isAttrSelected, selectedAttrCount } from "../data/utils";
 import { IAttribute } from "../types";
 
@@ -13,17 +13,24 @@ interface IProps {
   setSelectedAttributes: (attributes: IAttribute[]) => void;
 }
 
-const attributesByGroup = {
-  1: attributes.filter(attribute => attribute.attributeGroupId === 1),
-  2: attributes.filter(attribute => attribute.attributeGroupId === 2),
-  3: attributes.filter(attribute => attribute.attributeGroupId === 3),
-};
+interface IAttributeGroupWithAttributes {
+  id: number;
+  name: string;
+  attributes: IAttribute[];
+}
 
-const CheckboxGroup = ({ attributesGroup, selectedAttributes, setSelectedAttributes }: { attributesGroup: IAttribute[] } & IProps) => {
+const attributeGroupWithAttributes: IAttributeGroupWithAttributes[] = attributeGroups.map(group => {
+  return {
+    ...group,
+    attributes: attributes.filter(attr => attr.attributeGroupId === group.id)
+  };
+});
+
+const CheckboxGroup = ({ attributeGroup, selectedAttributes, setSelectedAttributes }: { attributeGroup: IAttributeGroupWithAttributes } & IProps) => {
   return (
     <div className="checkbox-group">
       {
-        attributesGroup.map((attribute, index) => {
+        attributeGroup.attributes.map((attribute, index) => {
           const handleCheckboxChange = () => {
             if (isAttrSelected(selectedAttributes, attribute)) {
               // If the attribute is already selected, remove it
@@ -53,15 +60,15 @@ export const Attributes = ({ selectedAttributes, setSelectedAttributes }: IProps
       <div className="attr-section-header">
         Choose attributes to include in your dataset.
       </div>
-      <Dropdown label="Noncommunicable Diseases" header={<Counter value={selectedAttrCount(selectedAttributes, attributesByGroup["1"])}/>}>
-        <CheckboxGroup attributesGroup={attributesByGroup["1"]} selectedAttributes={selectedAttributes} setSelectedAttributes={setSelectedAttributes} />
-      </Dropdown>
-      <Dropdown label="Environmental Factors and Affects" header={<Counter value={selectedAttrCount(selectedAttributes, attributesByGroup["2"])}/>}>
-        <CheckboxGroup attributesGroup={attributesByGroup["2"]} selectedAttributes={selectedAttributes} setSelectedAttributes={setSelectedAttributes} />
-      </Dropdown>
-      <Dropdown label="Immunization & Communicable Diseases" header={<Counter value={selectedAttrCount(selectedAttributes, attributesByGroup["3"])}/>}>
-        <CheckboxGroup attributesGroup={attributesByGroup["3"]} selectedAttributes={selectedAttributes} setSelectedAttributes={setSelectedAttributes} />
-      </Dropdown>
+      {
+        attributeGroupWithAttributes.map((group, index) => {
+          return (
+            <Dropdown key={index} label={group.name} header={<Counter value={selectedAttrCount(selectedAttributes, group.attributes)} />}>
+              <CheckboxGroup attributeGroup={group} selectedAttributes={selectedAttributes} setSelectedAttributes={setSelectedAttributes} />
+            </Dropdown>
+          );
+        })
+      }
     </div>
   );
 };
