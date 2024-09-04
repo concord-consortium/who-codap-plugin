@@ -6,11 +6,11 @@ import { Attributes } from "./attributes";
 import { Countries } from "./countries";
 import { Years } from "./years";
 import { IAttribute, ICountry, IYear } from "../types";
+import { InfoModal } from "./info-modal";
 
 import InfoIcon from "../assets/info.svg";
 
 import "./app.scss";
-import { InfoModal } from "./info-modal";
 
 const kPluginName = "World Health Organization Plugin";
 const kVersion = "0.0.1";
