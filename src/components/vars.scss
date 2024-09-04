@@ -19,3 +19,32 @@ $text-color: #222;
 @mixin section-header {
   margin: 8px 0;
 }
+
+@mixin footer {
+  margin-top: auto; /* Pushes the footer to the bottom */
+  border-top: 1px solid $teal-light;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  button {
+    height: 32px;
+    border-radius: 3px;
+    border: solid 1px $teal-light;
+    background-color: white;
+    cursor: pointer;
+    font-family: $font-family;
+    font-size: 12px;
+
+    &:hover {
+      background-color: $teal-light-12;
+    }
+    &:active {
+      background-color: $teal-light-25;
+    }
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+}

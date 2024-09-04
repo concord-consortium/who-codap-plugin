@@ -1,0 +1,41 @@
+@import "./vars.scss";
+
+.info-modal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .info-modal {
+    width: 324px;
+    border-radius: 6px;
+    background-color: white;
+
+    .info-header {
+      height: 25px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      background-color: $teal-dark;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .info-modal-body {
+      padding: 0 14px;
+    }
+
+    .info-modal-footer {
+      @include footer;
+      padding-bottom: 10px;
+      justify-content: flex-end;
+    }
+  }
+}

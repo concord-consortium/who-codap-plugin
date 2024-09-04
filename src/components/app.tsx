@@ -10,6 +10,7 @@ import { IAttribute, ICountry, IYear } from "../types";
 import InfoIcon from "../assets/info.svg";
 
 import "./app.scss";
+import { InfoModal } from "./info-modal";
 
 const kPluginName = "World Health Organization Plugin";
 const kVersion = "0.0.1";
@@ -23,16 +24,21 @@ export const App = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<IAttribute[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<ICountry[]>([]);
   const [selectedYears, setSelectedYears] = useState<IYear[]>([]);
+  const [infoVisible, setInfoVisible] = useState(false);
 
   useEffect(() => {
     initializePlugin({ pluginName: kPluginName, version: kVersion, dimensions: kInitialDimensions });
   }, []);
 
+  const handleInfoClick = () => {
+    setInfoVisible(!infoVisible);
+  };
+
   return (
     <div className="app">
       <div className="app-header">
         Retrieve data from the World Health Organization for different countries or regions of the world.
-        <div className="info-icon">
+        <div className="info-icon" onClick={handleInfoClick}>
           <InfoIcon />
         </div>
       </div>
@@ -53,6 +59,9 @@ export const App = () => {
         </div>
         <button>Get Data</button>
       </div>
+      {
+        infoVisible && <InfoModal onClose={handleInfoClick} />
+      }
     </div>
   );
 };
