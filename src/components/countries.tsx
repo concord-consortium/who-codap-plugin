@@ -76,7 +76,7 @@ export const Countries = ({ selectedCountries, setSelectedCountries }: IProps) =
   return (
     <div className="countries-section">
       <div className="countries-section-header">
-        Choose countries to include in your dataset
+        Choose countries to include in your dataset.
       </div>
       {
         regionsWithCountries.map((region, index) => {

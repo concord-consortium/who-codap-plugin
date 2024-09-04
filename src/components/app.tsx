@@ -4,7 +4,8 @@ import { Dropdown } from "./dropdown";
 import { MainDropdownHeader } from "./main-dropdown-header";
 import { Attributes } from "./attributes";
 import { Countries } from "./countries";
-import { IAttribute, ICountry } from "../types";
+import { Years } from "./years";
+import { IAttribute, ICountry, IYear } from "../types";
 
 import InfoIcon from "../assets/info.svg";
 
@@ -21,6 +22,7 @@ const kInitialDimensions = {
 export const App = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<IAttribute[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<ICountry[]>([]);
+  const [selectedYears, setSelectedYears] = useState<IYear[]>([]);
 
   useEffect(() => {
     initializePlugin({ pluginName: kPluginName, version: kVersion, dimensions: kInitialDimensions });
@@ -42,8 +44,8 @@ export const App = () => {
         <Dropdown label="Countries" header={<MainDropdownHeader selectedNames={selectedCountries.map(c => c.name)} />}>
           <Countries selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries} />
         </Dropdown>
-        <Dropdown label="Years">
-          TODO
+        <Dropdown label="Years" header={<MainDropdownHeader selectedNames={selectedYears.map(c => c.name)} />}>
+          <Years selectedYears={selectedYears} setSelectedYears={setSelectedYears} />
         </Dropdown>
       </div>
       <div className="app-footer">
