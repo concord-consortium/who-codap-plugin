@@ -12,60 +12,42 @@ describe("request", () => {
       allYears: false,
     });
     expect(data.length).toBe(6);
-    expect(data).toStrictEqual(      [
+    expect(data).toStrictEqual([
       {
-        attribute: "Obesity, Children (5-9 yr)",
-        attributeGroup: "Noncommunicable Diseases",
-        units: "Percentage",
-        country: "Afghanistan",
-        region: "Eastern Mediterranean Region",
-        year: "2022",
-        value: 9.56
+        Year: "2022",
+        Country: "Afghanistan",
+        Region: "Eastern Mediterranean Region",
+        "Obesity, Children (5-9 yr)": 9.56
       },
       {
-        attribute: "Obesity, Children (5-9 yr)",
-        attributeGroup: "Noncommunicable Diseases",
-        units: "Percentage",
-        country: "Afghanistan",
-        region: "Eastern Mediterranean Region",
-        year: "2021",
-        value: 8.9
+        Year: "2021",
+        Country: "Afghanistan",
+        Region: "Eastern Mediterranean Region",
+        "Obesity, Children (5-9 yr)": 8.9
       },
       {
-        attribute: "Obesity, Children (5-9 yr)",
-        attributeGroup: "Noncommunicable Diseases",
-        units: "Percentage",
-        country: "Afghanistan",
-        region: "Eastern Mediterranean Region",
-        year: "2020",
-        value: 8.27
+        Year: "2020",
+        Country: "Afghanistan",
+        Region: "Eastern Mediterranean Region",
+        "Obesity, Children (5-9 yr)": 8.27
       },
       {
-        attribute: "Obesity, Children (5-9 yr)",
-        attributeGroup: "Noncommunicable Diseases",
-        units: "Percentage",
-        country: "Albania",
-        region: "European Region",
-        year: "2022",
-        value: 11.23
+        Year: "2022",
+        Country: "Albania",
+        Region: "European Region",
+        "Obesity, Children (5-9 yr)": 11.23
       },
       {
-        attribute: "Obesity, Children (5-9 yr)",
-        attributeGroup: "Noncommunicable Diseases",
-        units: "Percentage",
-        country: "Albania",
-        region: "European Region",
-        year: "2021",
-        value: 10.95
+        Year: "2021",
+        Country: "Albania",
+        Region: "European Region",
+        "Obesity, Children (5-9 yr)": 10.95
       },
       {
-        attribute: "Obesity, Children (5-9 yr)",
-        attributeGroup: "Noncommunicable Diseases",
-        units: "Percentage",
-        country: "Albania",
-        region: "European Region",
-        year: "2020",
-        value: 10.68
+        Year: "2020",
+        Country: "Albania",
+        Region: "European Region",
+        "Obesity, Children (5-9 yr)": 10.68
       }
     ]);
     expect(rawDataValueRows.length).toBe(330);

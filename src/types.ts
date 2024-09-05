@@ -31,14 +31,11 @@ export interface IYear {
   name: string;
 }
 
-export interface IDataValue {
-  attribute: string;
-  attributeGroup: string;
-  units: string;
-  country: string;
-  region: string;
-  year: string;
-  value: number;
+export interface ICaseValue {
+  Country: string;
+  Region: string;
+  Year: string;
+  [string: string]: number | string; // attribute name and value
 }
 
                             // attributeId, countryId, yearId, value

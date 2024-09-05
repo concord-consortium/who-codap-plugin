@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { initializePlugin } from "@concord-consortium/codap-plugin-api";
+import { createChildCollection, createDataContext, createItems, createParentCollection, createTable, getDataContext, initializePlugin } from "@concord-consortium/codap-plugin-api";
 import { Dropdown } from "./dropdown";
 import { MainDropdownHeader } from "./main-dropdown-header";
 import { Attributes } from "./attributes";
@@ -7,6 +7,7 @@ import { Countries } from "./countries";
 import { Years } from "./years";
 import { IAttribute, ICountry, IYear } from "../types";
 import { InfoModal } from "./info-modal";
+import { requestData } from "../data/request";
 
 import InfoIcon from "../assets/info.svg";
 
@@ -18,7 +19,23 @@ const kInitialDimensions = {
   width: 380,
   height: 520
 };
-// const kDataContextName = "WHODataPluginData";
+const kDataContextName = "WHODataPluginData";
+const kParentCollectionName = "Countries";
+const kChildCollectionName = "Attributes";
+const kParentCollectionAttributes = [
+  {
+    name: "Country",
+    type: "categorical"
+  },
+  {
+    name: "Region",
+    type: "categorical"
+  }
+];
+const kYearAttribute = {
+  name: "Year",
+  type: "numeric"
+};
 
 export const App = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<IAttribute[]>([]);
@@ -32,6 +49,43 @@ export const App = () => {
 
   const handleInfoClick = () => {
     setInfoVisible(!infoVisible);
+  };
+
+  const handleCreateData = async() => {
+    const existingDataContext = await getDataContext(kDataContextName);
+    let createDC;
+    if (!existingDataContext.success) {
+      createDC = await createDataContext(kDataContextName);
+    }
+    if (existingDataContext?.success || createDC?.success) {
+      await createParentCollection(
+        kDataContextName,
+        kParentCollectionName,
+        kParentCollectionAttributes
+      );
+      // TODO: move to separate helper, add description (units, attr group?)
+      const childAttributes = [
+        kYearAttribute,
+        ...selectedAttributes.map(a => ({ name: a.name, type: "numeric" }))
+      ];
+      await createChildCollection(
+        kDataContextName,
+        kChildCollectionName,
+        kParentCollectionName,
+        childAttributes
+      );
+      const cases = await requestData({
+        attributeIds: selectedAttributes.map(a => a.id),
+        countryIds: selectedCountries.map(c => c.id),
+        yearIds: selectedYears.map(year => year.id),
+        allCountries: false,
+        allYears: false,
+        allCountriesInRegionIds: [],
+      });
+
+      await createItems(kDataContextName, cases);
+      await createTable(kDataContextName);
+    }
   };
 
   return (
@@ -57,7 +111,7 @@ export const App = () => {
       <div className="app-footer">
         <div className="app-message">
         </div>
-        <button>Get Data</button>
+        <button onClick={handleCreateData}>Get Data</button>
       </div>
       {
         infoVisible && <InfoModal onClose={handleInfoClick} />

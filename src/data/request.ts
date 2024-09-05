@@ -1,5 +1,5 @@
-import { IDataValue } from "../types";
-import { attributeGroups, attributes, attributeUnits, countries, regions, years } from "./selectors";
+import { ICaseValue } from "../types";
+import { attributes, countries, regions, years } from "./selectors";
 import { rawDataValueRows } from "./values";
 
 interface IRequestDataOptions {
@@ -18,15 +18,13 @@ const makeMap = <T>(list: (T & {id: number})[]): Record<number, T> => {
   }, {});
 };
 
-const attributeGroupMap = makeMap(attributeGroups);
-const attributeUnitsMap = makeMap(attributeUnits);
 const attributeMap = makeMap(attributes);
 const regionMap = makeMap(regions);
 const countryMap = makeMap(countries);
 const yearMap = makeMap(years);
 
-export const requestData = async (options: IRequestDataOptions): Promise<IDataValue[]> => {
-  return new Promise<IDataValue[]>((resolve, reject) => {
+export const requestData = async (options: IRequestDataOptions): Promise<ICaseValue[]> => {
+  return new Promise<ICaseValue[]>((resolve, reject) => {
     const { attributeIds, countryIds, allCountries, allCountriesInRegionIds, yearIds, allYears } = options;
 
     // this will probably change to fetch a JSON file per attribute but for now we use the stubbed values
@@ -41,27 +39,30 @@ export const requestData = async (options: IRequestDataOptions): Promise<IDataVa
         return match;
       });
 
-    // convert from a raw row to an array that can be posted to CODAP
-    const values = filteredRows
-      .map<IDataValue>(([attributeId, countryId, yearId, value]) => {
+    const cases = filteredRows
+      .reduce<Record<string, ICaseValue>>((acc, [attributeId, countryId, yearId, value]) => {
         const attribute = attributeMap[attributeId];
-        const attributeGroup = attributeGroupMap[attribute.attributeGroupId];
-        const units = attributeUnitsMap[attribute.unitId];
         const country = countryMap[countryId];
         const region = regionMap[country.regionId];
         const year = yearMap[yearId];
 
-        return {
-          attribute: attribute.name,
-          attributeGroup: attributeGroup.name,
-          units: units.name,
-          country: country.name,
-          region: region.name,
-          year: year.name,
-          value
-        };
-      });
+        // Create the key for grouping by year and country
+        const yearCountryKey = `${year.name}-${country.name}`;
+        // Initialize the group if it doesn't exist yet
+        if (!acc[yearCountryKey]) {
+          acc[yearCountryKey] = {
+            Year: year.name,
+            Country: country.name,
+            Region: region.name
+          };
+        }
 
-    resolve(values);
+        // Add the attribute and its value
+        acc[yearCountryKey][attribute.name] = value;
+
+        return acc;
+      }, {});
+
+    resolve(Object.values(cases));
   });
 };
