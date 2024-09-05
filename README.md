@@ -42,3 +42,10 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
+## Updating Data Values
+
+There are two npm scripts used to update the data values based on the WHO API and the csv files stored in a folder on [Google Drive](https://drive.google.com/drive/folders/1VswLD13ErY6iseuz5pJ_dGo1kvaqzaHf).  The csv files should be downloaded into the `src/scripts/input` folder (which may need to be created first as it is in `..gitignore`). AFTER YOU DOWNLOAD THE CSVS YOU'LL NEED TO CLEAN UP THE HEADERS IN THE FILES TO REMOVE ALL THE HEADERS ABOVE THE `,,,,,,,,,` LINE AT THE TOP OF THE FILE.
+
+`npm run scripts:pull-all-indicators` will use the WHO API and pull down all the indicator json files and write them out as CSVs in the `src/scripts/output` folder (which is in `.gitignore`).  If your `src/scripts/output` folder is empty or the contents are old this script should be run once.
+
+`npm run scripts:process-csvs` should be run after the csvs are downloaded from the [Google Drive folder](https://drive.google.com/drive/folders/1VswLD13ErY6iseuz5pJ_dGo1kvaqzaHf) and the `pull-all-indicators` script is run to get the API values.  This script runs over both sets of csvs and then updates the `src/public/values.json` file.  You'll see "Unable to find ..." output from that script that should be reviewed to ensure it is ok.  You can ignore years outside of the years that are required and countries that are really territories of other countries (like Puerto Rico or French Guiana).

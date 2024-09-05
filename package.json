@@ -57,7 +57,9 @@
     "test:cypress:open": "cypress open",
     "test:coverage:cypress:open": "cypress open --env coverage=true",
     "test:full": "npm-run-all test test:cypress",
-    "strings:pull": "node bin/pull-strings.js --prefix=DG.plugin --out=./src/strings.json"
+    "strings:pull": "node bin/pull-strings.js --prefix=DG.plugin --out=./src/strings.json",
+    "scripts:pull-all-indicators": "cd src/scripts && node pull-all-indicators.js",
+    "scripts:process-csvs": "cd src/scripts && ts-node process-csvs.ts"
   },
   "repository": {
     "type": "git",
@@ -92,8 +94,10 @@
     "axios": "^1.7.3",
     "caniuse-lite": "^1.0.30001489",
     "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^12.0.2",
     "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
+    "csv-parser": "^3.0.0",
     "cypress": "^12.13.0",
     "eslint": "^8.41.0",
     "eslint-config-react": "^1.1.7",
@@ -125,7 +129,7 @@
     "style-loader": "^3.3.3",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.0.4",
     "wait-on": "^7.0.1",
     "webpack": "^5.84.1",

@@ -14,3 +14,7 @@
 # Logs
 npm-debug.log*
 npm-error.log*
+
+# script input (from files in Google Drive) and output (from scripts)
+/src/scripts/input
+/src/scripts/output

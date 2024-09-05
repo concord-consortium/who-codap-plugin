@@ -1,6 +1,5 @@
-import { ICaseValue } from "../types";
+import { ICaseValue, IRawDataValueRow } from "../types";
 import { attributes, countries, regions, years } from "./selectors";
-import { rawDataValueRows } from "./values";
 
 interface IRequestDataOptions {
   attributeIds: number[],
@@ -23,46 +22,59 @@ const regionMap = makeMap(regions);
 const countryMap = makeMap(countries);
 const yearMap = makeMap(years);
 
+let rawDataValueRows: IRawDataValueRow[] | undefined = undefined;
+
+const loadJSON = async (): Promise<IRawDataValueRow[]> => {
+  if (rawDataValueRows) {
+    return rawDataValueRows;
+  }
+
+  const response = await fetch("values.json");
+  if (!response.ok) {
+    throw new Error(`Failed to fetch values.json: ${response.statusText}`);
+  }
+
+  const data: IRawDataValueRow[] = await response.json();
+  return data;
+};
+
 export const requestData = async (options: IRequestDataOptions): Promise<ICaseValue[]> => {
-  return new Promise<ICaseValue[]>((resolve, reject) => {
-    const { attributeIds, countryIds, allCountries, allCountriesInRegionIds, yearIds, allYears } = options;
+  const fetchedRows = await loadJSON();
 
-    // this will probably change to fetch a JSON file per attribute but for now we use the stubbed values
-    const fetchedRows = rawDataValueRows;
+  const { attributeIds, countryIds, allCountries, allCountriesInRegionIds, yearIds, allYears } = options;
 
-    // match the fetched rows to the filter options
-    const filteredRows = fetchedRows
-      .filter(([attributeId, countryId, yearId, value]) => {
-        let match = attributeIds.includes(attributeId);
-        match = match && (allCountries || countryIds.includes(countryId) || allCountriesInRegionIds.includes(countryMap[countryId].regionId));
-        match = match && (allYears || yearIds.includes(yearId));
-        return match;
-      });
+  // match the fetched rows to the filter options
+  const filteredRows = fetchedRows
+    .filter(([attributeId, countryId, yearId, value]) => {
+      let match = attributeIds.length === 0 || attributeIds.includes(attributeId);
+      match = match && (allCountries || countryIds.length === 0 || countryIds.includes(countryId) || allCountriesInRegionIds.includes(countryMap[countryId].regionId));
+      match = match && (allYears || yearIds.length === 0 || yearIds.includes(yearId));
+      return match;
+    });
 
-    const cases = filteredRows
-      .reduce<Record<string, ICaseValue>>((acc, [attributeId, countryId, yearId, value]) => {
-        const attribute = attributeMap[attributeId];
-        const country = countryMap[countryId];
-        const region = regionMap[country.regionId];
-        const year = yearMap[yearId];
+  const cases = filteredRows
+    .reduce<Record<string, ICaseValue>>((acc, [attributeId, countryId, yearId, value]) => {
+      const attribute = attributeMap[attributeId];
+      const country = countryMap[countryId];
+      const region = regionMap[country.regionId];
+      const year = yearMap[yearId];
 
-        // Create the key for grouping by year and country
-        const yearCountryKey = `${year.name}-${country.name}`;
-        // Initialize the group if it doesn't exist yet
-        if (!acc[yearCountryKey]) {
-          acc[yearCountryKey] = {
-            Year: year.name,
-            Country: country.name,
-            Region: region.name
-          };
-        }
+      // Create the key for grouping by year and country
+      const yearCountryKey = `${year.name}-${country.name}`;
+      // Initialize the group if it doesn't exist yet
+      if (!acc[yearCountryKey]) {
+        acc[yearCountryKey] = {
+          Year: year.name,
+          Country: country.name,
+          Region: region.name
+        };
+      }
 
-        // Add the attribute and its value
-        acc[yearCountryKey][attribute.name] = value;
+      // Add the attribute and its value
+      acc[yearCountryKey][attribute.name] = value;
 
-        return acc;
-      }, {});
+      return acc;
+    }, {});
 
-    resolve(Object.values(cases));
-  });
+  return Object.values(cases);
 };

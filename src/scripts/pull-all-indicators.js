@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, no-undef */
+/* eslint-disable no-console, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, no-undef */
 const axios = require("axios");
 const fs = require("fs");
 const { Parser } = require("json2csv");
@@ -50,4 +50,4 @@ const main = async () => {
 };
 
 main();
-/* eslint-enable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, no-undef */
+/* eslint-enable no-console, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, no-undef */
