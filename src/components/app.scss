@@ -19,8 +19,10 @@
   }
 
   .app-scroll-area {
-    overflow-y: auto;
-    max-height: 390px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 392px;
+    max-height: 392px;
   }
 
   .app-header {
