@@ -14,14 +14,22 @@ import { InfoModal } from "./info-modal";
 import { requestData } from "../data/request";
 
 import InfoIcon from "../assets/info.svg";
+import ProgressIndicator from "../assets/progress-indicator.svg";
+import DoneIcon from "../assets/done.svg";
 
 import "./app.scss";
+
+type DataStatus = "" | "retrieving" | "retrieved" | "incomplete";
 
 export const App = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<IAttribute[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<ICountry[]>([]);
   const [selectedYears, setSelectedYears] = useState<IYear[]>([]);
   const [infoVisible, setInfoVisible] = useState(false);
+  const [dataStatus, setDataStatus] = useState<DataStatus>("");
+
+  const getDataDisabled = dataStatus === "retrieving"
+    || selectedAttributes.length === 0 || selectedCountries.length === 0 || selectedYears.length === 0;
 
   useEffect(() => {
     initializePlugin({ pluginName: kPluginName, version: kVersion, dimensions: kInitialDimensions });
@@ -32,6 +40,11 @@ export const App = () => {
   };
 
   const handleCreateData = async() => {
+    if (dataStatus === "retrieving") {
+      return;
+    }
+    setDataStatus("retrieving");
+
     await deleteAllCases();
 
     const existingDataContext = await getDataContext(kDataContextName);
@@ -50,6 +63,8 @@ export const App = () => {
       allCountriesInRegionIds: [],
     });
     await createItems(kDataContextName, cases);
+
+    setDataStatus("retrieved");
   };
 
   return (
@@ -74,8 +89,15 @@ export const App = () => {
       </div>
       <div className="app-footer">
         <div className="app-message">
+          {
+            dataStatus === "retrieving" &&
+            <div className="progress-indicator"><ProgressIndicator /> Retrieving data...</div>
+          }
+          {
+            dataStatus === "retrieved" && <div className="done"><DoneIcon /> Retrieved data</div>
+          }
         </div>
-        <button onClick={handleCreateData}>Get Data</button>
+        <button onClick={handleCreateData} disabled={getDataDisabled}>Get Data</button>
       </div>
       {
         infoVisible && <InfoModal onClose={handleInfoClick} />

@@ -44,6 +44,7 @@ $text-color: #222;
       background-color: $teal-light-25;
     }
     &:disabled {
+      pointer-events: none;
       opacity: 0.4;
     }
   }
