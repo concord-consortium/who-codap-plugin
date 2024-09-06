@@ -9,3 +9,10 @@ export const isAttrSelected = (selectedAttributes: IAttrLike[], attribute: IAttr
 export const selectedAttrCount = (selectedAttributes: IAttrLike[], attributesGroup: IAttrLike[]) => {
   return selectedAttributes.filter(attr => attributesGroup.some(groupAttr => groupAttr.id === attr.id)).length;
 };
+
+export const makeMap = <T>(list: (T & {id: number})[]): Record<number, T> => {
+  return list.reduce<Record<number, T>>((acc, cur) => {
+    acc[cur.id] = cur;
+    return acc;
+  }, {});
+};

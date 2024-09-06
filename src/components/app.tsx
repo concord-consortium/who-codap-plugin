@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { createChildCollection, createDataContext, createItems, createParentCollection, createTable, getDataContext, initializePlugin } from "@concord-consortium/codap-plugin-api";
+import { createItems, getDataContext, initializePlugin } from "@concord-consortium/codap-plugin-api";
+import {
+  createNewDataContext, deleteAllCases, kDataContextName, kInitialDimensions, kPluginName, kVersion,
+  syncChildCollectionAttributes
+} from "../data/codap-helpers";
 import { Dropdown } from "./dropdown";
 import { MainDropdownHeader } from "./main-dropdown-header";
 import { Attributes } from "./attributes";
@@ -12,30 +16,6 @@ import { requestData } from "../data/request";
 import InfoIcon from "../assets/info.svg";
 
 import "./app.scss";
-
-const kPluginName = "World Health Organization Plugin";
-const kVersion = "0.0.1";
-const kInitialDimensions = {
-  width: 380,
-  height: 520
-};
-const kDataContextName = "WHODataPluginData";
-const kParentCollectionName = "Countries";
-const kChildCollectionName = "Attributes";
-const kParentCollectionAttributes = [
-  {
-    name: "Country",
-    type: "categorical"
-  },
-  {
-    name: "Region",
-    type: "categorical"
-  }
-];
-const kYearAttribute = {
-  name: "Year",
-  type: "numeric"
-};
 
 export const App = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<IAttribute[]>([]);
@@ -52,40 +32,24 @@ export const App = () => {
   };
 
   const handleCreateData = async() => {
-    const existingDataContext = await getDataContext(kDataContextName);
-    let createDC;
-    if (!existingDataContext.success) {
-      createDC = await createDataContext(kDataContextName);
-    }
-    if (existingDataContext?.success || createDC?.success) {
-      await createParentCollection(
-        kDataContextName,
-        kParentCollectionName,
-        kParentCollectionAttributes
-      );
-      // TODO: move to separate helper, add description (units, attr group?)
-      const childAttributes = [
-        kYearAttribute,
-        ...selectedAttributes.map(a => ({ name: a.name, type: "numeric" }))
-      ];
-      await createChildCollection(
-        kDataContextName,
-        kChildCollectionName,
-        kParentCollectionName,
-        childAttributes
-      );
-      const cases = await requestData({
-        attributeIds: selectedAttributes.map(a => a.id),
-        countryIds: selectedCountries.map(c => c.id),
-        yearIds: selectedYears.map(year => year.id),
-        allCountries: false,
-        allYears: false,
-        allCountriesInRegionIds: [],
-      });
+    await deleteAllCases();
 
-      await createItems(kDataContextName, cases);
-      await createTable(kDataContextName);
+    const existingDataContext = await getDataContext(kDataContextName);
+    if (!existingDataContext.success) {
+      await createNewDataContext(selectedAttributes);
+    } else {
+      await syncChildCollectionAttributes(selectedAttributes);
     }
+
+    const cases = await requestData({
+      attributeIds: selectedAttributes.map(a => a.id),
+      countryIds: selectedCountries.map(c => c.id),
+      yearIds: selectedYears.map(year => year.id),
+      allCountries: false,
+      allYears: false,
+      allCountriesInRegionIds: [],
+    });
+    await createItems(kDataContextName, cases);
   };
 
   return (

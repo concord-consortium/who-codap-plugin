@@ -1,5 +1,6 @@
 import { ICaseValue, IRawDataValueRow } from "../types";
 import { attributes, countries, regions, years } from "./selectors";
+import { makeMap } from "./utils";
 
 // this is a large file and webpack.config.js is setup to embed this as an asset filename
 // so that we can use fetch() with it below
@@ -14,13 +15,6 @@ interface IRequestDataOptions {
   yearIds: number[],
   allYears: boolean,
 }
-
-const makeMap = <T>(list: (T & {id: number})[]): Record<number, T> => {
-  return list.reduce<Record<number, T>>((acc, cur) => {
-    acc[cur.id] = cur;
-    return acc;
-  }, {});
-};
 
 const attributeMap = makeMap(attributes);
 const regionMap = makeMap(regions);
