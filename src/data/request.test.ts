@@ -20,10 +20,7 @@ describe("request", () => {
     const data = await requestData({
       attributeIds: [1],
       countryIds: [49, 70],
-      allCountries: false,
-      allCountriesInRegionIds: [],
       yearIds: [1, 2, 3],
-      allYears: false,
     });
     expect(data.length).toBe(6);
     expect(data).toStrictEqual([
