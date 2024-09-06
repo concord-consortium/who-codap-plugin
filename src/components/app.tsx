@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { createChildCollection, createDataContext, createItems, createParentCollection, createTable, getDataContext, initializePlugin } from "@concord-consortium/codap-plugin-api";
+import { createItems, getDataContext, initializePlugin } from "@concord-consortium/codap-plugin-api";
+import {
+  createNewDataContext, deleteAllCases, kDataContextName, kInitialDimensions, kPluginName, kVersion,
+  syncChildCollectionAttributes
+} from "../data/codap-helpers";
 import { Dropdown } from "./dropdown";
 import { MainDropdownHeader } from "./main-dropdown-header";
 import { Attributes } from "./attributes";
@@ -8,41 +12,24 @@ import { Years } from "./years";
 import { IAttribute, ICountry, IYear } from "../types";
 import { InfoModal } from "./info-modal";
 import { requestData } from "../data/request";
+import { attributes } from "../data/selectors";
 
 import InfoIcon from "../assets/info.svg";
+import ProgressIndicator from "../assets/progress-indicator.svg";
+import DoneIcon from "../assets/done.svg";
 
 import "./app.scss";
 
-const kPluginName = "World Health Organization Plugin";
-const kVersion = "0.0.1";
-const kInitialDimensions = {
-  width: 380,
-  height: 520
-};
-const kDataContextName = "WHODataPluginData";
-const kParentCollectionName = "Countries";
-const kChildCollectionName = "Attributes";
-const kParentCollectionAttributes = [
-  {
-    name: "Country",
-    type: "categorical"
-  },
-  {
-    name: "Region",
-    type: "categorical"
-  }
-];
-const kYearAttribute = {
-  name: "Year",
-  type: "numeric"
-};
+type DataStatus = "" | "retrieving" | "retrieved" | "incomplete";
 
 export const App = () => {
   const [selectedAttributes, setSelectedAttributes] = useState<IAttribute[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<ICountry[]>([]);
   const [selectedYears, setSelectedYears] = useState<IYear[]>([]);
   const [infoVisible, setInfoVisible] = useState(false);
+  const [dataStatus, setDataStatus] = useState<DataStatus>("");
 
+  const getDataDisabled = dataStatus === "retrieving";
   useEffect(() => {
     initializePlugin({ pluginName: kPluginName, version: kVersion, dimensions: kInitialDimensions });
   }, []);
@@ -52,40 +39,29 @@ export const App = () => {
   };
 
   const handleCreateData = async() => {
-    const existingDataContext = await getDataContext(kDataContextName);
-    let createDC;
-    if (!existingDataContext.success) {
-      createDC = await createDataContext(kDataContextName);
+    if (dataStatus === "retrieving") {
+      return;
     }
-    if (existingDataContext?.success || createDC?.success) {
-      await createParentCollection(
-        kDataContextName,
-        kParentCollectionName,
-        kParentCollectionAttributes
-      );
-      // TODO: move to separate helper, add description (units, attr group?)
-      const childAttributes = [
-        kYearAttribute,
-        ...selectedAttributes.map(a => ({ name: a.name, type: "numeric" }))
-      ];
-      await createChildCollection(
-        kDataContextName,
-        kChildCollectionName,
-        kParentCollectionName,
-        childAttributes
-      );
-      const cases = await requestData({
-        attributeIds: selectedAttributes.map(a => a.id),
-        countryIds: selectedCountries.map(c => c.id),
-        yearIds: selectedYears.map(year => year.id),
-        allCountries: false,
-        allYears: false,
-        allCountriesInRegionIds: [],
-      });
+    setDataStatus("retrieving");
 
-      await createItems(kDataContextName, cases);
-      await createTable(kDataContextName);
+    await deleteAllCases();
+
+    const tableAttributes = selectedAttributes.length === 0 ? attributes : selectedAttributes;
+    const existingDataContext = await getDataContext(kDataContextName);
+    if (!existingDataContext.success) {
+      await createNewDataContext(tableAttributes);
+    } else {
+      await syncChildCollectionAttributes(tableAttributes);
     }
+
+    const cases = await requestData({
+      attributeIds: selectedAttributes.map(a => a.id),
+      countryIds: selectedCountries.map(c => c.id),
+      yearIds: selectedYears.map(year => year.id)
+    });
+    await createItems(kDataContextName, cases);
+
+    setDataStatus("retrieved");
   };
 
   return (
@@ -110,8 +86,15 @@ export const App = () => {
       </div>
       <div className="app-footer">
         <div className="app-message">
+          {
+            dataStatus === "retrieving" &&
+            <div className="progress-indicator"><ProgressIndicator /> Retrieving data...</div>
+          }
+          {
+            dataStatus === "retrieved" && <div className="done"><DoneIcon /> Retrieved data</div>
+          }
         </div>
-        <button onClick={handleCreateData}>Get Data</button>
+        <button onClick={handleCreateData} disabled={getDataDisabled}>Get Data</button>
       </div>
       {
         infoVisible && <InfoModal onClose={handleInfoClick} />
