@@ -12,6 +12,7 @@ import { Years } from "./years";
 import { IAttribute, ICountry, IYear } from "../types";
 import { InfoModal } from "./info-modal";
 import { requestData } from "../data/request";
+import { attributes } from "../data/selectors";
 
 import InfoIcon from "../assets/info.svg";
 import ProgressIndicator from "../assets/progress-indicator.svg";
@@ -28,9 +29,7 @@ export const App = () => {
   const [infoVisible, setInfoVisible] = useState(false);
   const [dataStatus, setDataStatus] = useState<DataStatus>("");
 
-  const getDataDisabled = dataStatus === "retrieving"
-    || selectedAttributes.length === 0 || selectedCountries.length === 0 || selectedYears.length === 0;
-
+  const getDataDisabled = dataStatus === "retrieving";
   useEffect(() => {
     initializePlugin({ pluginName: kPluginName, version: kVersion, dimensions: kInitialDimensions });
   }, []);
@@ -47,20 +46,18 @@ export const App = () => {
 
     await deleteAllCases();
 
+    const tableAttributes = selectedAttributes.length === 0 ? attributes : selectedAttributes;
     const existingDataContext = await getDataContext(kDataContextName);
     if (!existingDataContext.success) {
-      await createNewDataContext(selectedAttributes);
+      await createNewDataContext(tableAttributes);
     } else {
-      await syncChildCollectionAttributes(selectedAttributes);
+      await syncChildCollectionAttributes(tableAttributes);
     }
 
     const cases = await requestData({
       attributeIds: selectedAttributes.map(a => a.id),
       countryIds: selectedCountries.map(c => c.id),
-      yearIds: selectedYears.map(year => year.id),
-      allCountries: false,
-      allYears: false,
-      allCountriesInRegionIds: [],
+      yearIds: selectedYears.map(year => year.id)
     });
     await createItems(kDataContextName, cases);
 
