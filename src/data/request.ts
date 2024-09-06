@@ -10,10 +10,7 @@ const valuesJSONSrcUrl = values as unknown as string;
 interface IRequestDataOptions {
   attributeIds: number[],
   countryIds: number[],
-  allCountries: boolean,
-  allCountriesInRegionIds: number[],
-  yearIds: number[],
-  allYears: boolean,
+  yearIds: number[]
 }
 
 const attributeMap = makeMap(attributes);
@@ -40,14 +37,14 @@ const loadJSON = async (): Promise<IRawDataValueRow[]> => {
 export const requestData = async (options: IRequestDataOptions): Promise<ICaseValue[]> => {
   const fetchedRows = await loadJSON();
 
-  const { attributeIds, countryIds, allCountries, allCountriesInRegionIds, yearIds, allYears } = options;
+  const { attributeIds, countryIds, yearIds } = options;
 
   // match the fetched rows to the filter options
   const filteredRows = fetchedRows
     .filter(([attributeId, countryId, yearId, value]) => {
       let match = attributeIds.length === 0 || attributeIds.includes(attributeId);
-      match = match && (allCountries || countryIds.length === 0 || countryIds.includes(countryId) || allCountriesInRegionIds.includes(countryMap[countryId].regionId));
-      match = match && (allYears || yearIds.length === 0 || yearIds.includes(yearId));
+      match = match && (countryIds.length === 0 || countryIds.includes(countryId));
+      match = match && (yearIds.length === 0 || yearIds.includes(yearId));
       return match;
     });
 
