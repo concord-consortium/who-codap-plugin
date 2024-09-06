@@ -35,7 +35,6 @@ export const deleteAllCases = async () => {
 const kYearAttribute = {
   name: "Year",
   type: "numeric",
-  unit: "Year",
   description: "Year"
 };
 const units = makeMap(attributeUnits);
@@ -74,18 +73,20 @@ export const createNewDataContext = async (attributes: IAttribute[]) => {
 };
 
 export const syncChildCollectionAttributes = async (attributes: IAttribute[]) => {
+  const childCollectionAttributes = getChildCollectionAttributes(attributes);
+
   const attrList = await getAttributeList(kDataContextName, kChildCollectionName);
   if (attrList.success) {
     const existingAttributes = attrList.values;
-    const attributesToCreate = attributes.filter(a => !existingAttributes.find((ea: any) => ea.name === a.name));
+    const attributesToCreate = childCollectionAttributes.filter(a => !existingAttributes.find((ea: any) => ea.name === a.name));
     attributesToCreate.forEach(attr => {
       codapInterface.sendRequest({
         action: "create",
         resource: `dataContext[${kDataContextName}].collection[${kChildCollectionName}].attribute`,
-        values: WHOAttributeToCODAPAttr(attr)
+        values: attr
       });
     });
-    const attributesToRemove = existingAttributes.filter((ea: any) => !attributes.find(a => a.name === ea.name));
+    const attributesToRemove = existingAttributes.filter((ea: any) => !childCollectionAttributes.find(a => a.name === ea.name));
     attributesToRemove.forEach((a: any) => {
       codapInterface.sendRequest({
         action: "delete",
