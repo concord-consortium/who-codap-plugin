@@ -204,7 +204,7 @@ const parseCSVFiles = async () => {
 
   console.log("All CSV files have been processed. Found", rawDataValueRows.length, "rows. Creating data file.");
 
-  const outputFilePath = path.resolve(__dirname, "../public/values.json");
+  const outputFilePath = path.resolve(__dirname, "../data/values.json");
   fs.writeFileSync(outputFilePath, JSON.stringify(rawDataValueRows));
 };
 

@@ -5,7 +5,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
 const os = require('os');
 
 // DEPLOY_PATH is set by the s3-deploy-action its value will be:
@@ -77,6 +76,10 @@ module.exports = (env, argv) => {
           test: /\.(png|woff|woff2|eot|ttf)$/,
           type: 'asset',
         },
+        {
+          test: /values.json$/,
+          type: 'asset/resource',
+        },
         { // disable svgo optimization for files ending in .nosvgo.svg
           test: /\.nosvgo\.svg$/i,
           loader: '@svgr/webpack',
@@ -139,14 +142,6 @@ module.exports = (env, argv) => {
       }),
       new MiniCssExtractPlugin({
         filename: devMode ? 'assets/[name].css' : 'assets/[name].[contenthash].css',
-      }),
-      new CopyPlugin({
-        patterns: [
-          {
-            from: path.resolve(__dirname, 'src/public/values.json'),
-            to: path.resolve(__dirname, 'dist/values.json')
-          }
-        ],
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',

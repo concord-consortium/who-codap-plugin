@@ -1,6 +1,11 @@
 import { ICaseValue, IRawDataValueRow } from "../types";
 import { attributes, countries, regions, years } from "./selectors";
 
+// this is a large file and webpack.config.js is setup to embed this as an asset filename
+// so that we can use fetch() with it below
+import values from "./values.json";
+const valuesJSONSrcUrl = values as unknown as string;
+
 interface IRequestDataOptions {
   attributeIds: number[],
   countryIds: number[],
@@ -29,7 +34,7 @@ const loadJSON = async (): Promise<IRawDataValueRow[]> => {
     return rawDataValueRows;
   }
 
-  const response = await fetch("values.json");
+  const response = await fetch(valuesJSONSrcUrl);
   if (!response.ok) {
     throw new Error(`Failed to fetch values.json: ${response.statusText}`);
   }
