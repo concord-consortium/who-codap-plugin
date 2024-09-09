@@ -48,29 +48,35 @@ export const requestData = async (options: IRequestDataOptions): Promise<ICaseVa
       return match;
     });
 
-  const cases = filteredRows
-    .reduce<Record<string, ICaseValue>>((acc, [attributeId, countryId, yearId, value]) => {
-      const attribute = attributeMap[attributeId];
+  const _countryIds = countryIds.length > 0 ? countryIds : countries.map(c => c.id);
+  const _yearIds = yearIds.length > 0 ? yearIds : years.map(y => y.id);
+
+  const countryYearMap: Record<string, ICaseValue> = {};
+  _countryIds.forEach(countryId => {
+    _yearIds.forEach(yearId => {
       const country = countryMap[countryId];
       const region = regionMap[country.regionId];
       const year = yearMap[yearId];
 
-      // Create the key for grouping by year and country
-      const yearCountryKey = `${year.name}-${country.name}`;
-      // Initialize the group if it doesn't exist yet
-      if (!acc[yearCountryKey]) {
-        acc[yearCountryKey] = {
-          Year: year.name,
-          Country: country.name,
-          Region: region.name
-        };
-      }
+      countryYearMap[`${countryId}-${yearId}`] = {
+        Country: country.name,
+        Region: region.name,
+        Year: year.name,
+      };
+    });
+  });
 
-      // Add the attribute and its value
-      acc[yearCountryKey][attribute.name] = value;
+  filteredRows.reduce<Record<string, ICaseValue>>((acc, [attributeId, countryId, yearId, value]) => {
+    // Create the key for grouping by year and country
+    const countryYearKey = `${countryId}-${yearId}`;
+    // Add the attribute and its value
+    if (acc[countryYearKey]) {
+      acc[countryYearKey][attributeMap[attributeId].name] = value;
+    } else {
+      console.warn("Incorrect country-year map");
+    }
+    return acc;
+  }, countryYearMap);
 
-      return acc;
-    }, {});
-
-  return Object.values(cases);
+  return Object.values(countryYearMap);
 };
