@@ -60,6 +60,7 @@ export const requestData = async (options: IRequestDataOptions): Promise<ICaseVa
 
       countryYearMap[`${countryId}-${yearId}`] = {
         Country: country.name,
+        Code: country.code,
         Region: region.name,
         Year: year.name,
       };

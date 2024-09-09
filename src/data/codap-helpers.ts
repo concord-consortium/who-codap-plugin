@@ -19,6 +19,15 @@ export const kParentCollectionAttributes = [
     type: "categorical"
   },
   {
+    name: "Code",
+    type: "categorical",
+    hidden: true
+  },
+  {
+    name: "Boundary",
+    formula: "lookupBoundary(country_boundaries, Code)"
+  },
+  {
     name: "Region",
     type: "categorical"
   }
