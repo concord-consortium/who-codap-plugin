@@ -18,6 +18,9 @@ const regionMap = makeMap(regions);
 const countryMap = makeMap(countries);
 const yearMap = makeMap(years);
 
+const allCountryIds = countries.map(c => c.id);
+const allYearIds = years.map(y => y.id);
+
 let rawDataValueRows: IRawDataValueRow[] | undefined = undefined;
 
 const loadJSON = async (): Promise<IRawDataValueRow[]> => {
@@ -48,8 +51,8 @@ export const requestData = async (options: IRequestDataOptions): Promise<ICaseVa
       return match;
     });
 
-  const _countryIds = countryIds.length > 0 ? countryIds : countries.map(c => c.id);
-  const _yearIds = yearIds.length > 0 ? yearIds : years.map(y => y.id);
+  const _countryIds = countryIds.length > 0 ? countryIds : allCountryIds;
+  const _yearIds = yearIds.length > 0 ? yearIds : allYearIds;
 
   const countryYearMap: Record<string, ICaseValue> = {};
   _countryIds.forEach(countryId => {
