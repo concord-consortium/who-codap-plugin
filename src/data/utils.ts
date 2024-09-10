@@ -1,3 +1,5 @@
+import { IAttribute, ICaseValue } from "../types";
+
 interface IAttrLike {
   id: number;
 }
@@ -15,4 +17,8 @@ export const makeMap = <T>(list: (T & {id: number})[]): Record<number, T> => {
     acc[cur.id] = cur;
     return acc;
   }, {});
+};
+
+export const isDataComplete = (cases: ICaseValue[], selectedAttributes: IAttribute[]) => {
+  return cases.every(c => selectedAttributes.every(a => c[a.name] !== undefined));
 };

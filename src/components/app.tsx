@@ -13,10 +13,12 @@ import { IAttribute, ICountry, IYear } from "../types";
 import { InfoModal } from "./info-modal";
 import { requestData } from "../data/request";
 import { attributes } from "../data/selectors";
+import { isDataComplete } from "../data/utils";
 
 import InfoIcon from "../assets/info.svg";
 import ProgressIndicator from "../assets/progress-indicator.svg";
 import DoneIcon from "../assets/done.svg";
+import WarningIcon from "../assets/warning.svg";
 
 import "./app.scss";
 
@@ -61,7 +63,7 @@ export const App = () => {
     });
     await createItems(kDataContextName, cases);
 
-    setDataStatus("retrieved");
+    setDataStatus(isDataComplete(cases, tableAttributes) ? "retrieved" : "incomplete");
   };
 
   return (
@@ -92,6 +94,9 @@ export const App = () => {
           }
           {
             dataStatus === "retrieved" && <div className="done"><DoneIcon /> Retrieved data</div>
+          }
+          {
+            dataStatus === "incomplete" && <div className="incomplete"><WarningIcon /> Some data requested are not available</div>
           }
         </div>
         <button onClick={handleCreateData} disabled={getDataDisabled}>Get Data</button>
