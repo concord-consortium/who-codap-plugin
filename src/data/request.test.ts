@@ -27,36 +27,42 @@ describe("request", () => {
       {
         Year: "2022",
         Country: "Afghanistan",
+        Code: "AF",
         Region: "Eastern Mediterranean Region",
         "Obesity, Children (5-9 yr)": 9.56
       },
       {
         Year: "2021",
         Country: "Afghanistan",
+        Code: "AF",
         Region: "Eastern Mediterranean Region",
         "Obesity, Children (5-9 yr)": 8.9
       },
       {
         Year: "2020",
         Country: "Afghanistan",
+        Code: "AF",
         Region: "Eastern Mediterranean Region",
         "Obesity, Children (5-9 yr)": 8.27
       },
       {
         Year: "2022",
         Country: "Albania",
+        Code: "AL",
         Region: "European Region",
         "Obesity, Children (5-9 yr)": 11.23
       },
       {
         Year: "2021",
         Country: "Albania",
+        Code: "AL",
         Region: "European Region",
         "Obesity, Children (5-9 yr)": 10.95
       },
       {
         Year: "2020",
         Country: "Albania",
+        Code: "AL",
         Region: "European Region",
         "Obesity, Children (5-9 yr)": 10.68
       }
