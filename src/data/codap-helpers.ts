@@ -4,7 +4,7 @@ import { makeMap } from "./utils";
 import { attributeGroups, attributeUnits } from "./selectors";
 
 export const kPluginName = "World Health Organization Plugin";
-export const kVersion = "0.0.1";
+export const kVersion = "1.0.0";
 export const kInitialDimensions = {
   width: 380,
   height: 520
