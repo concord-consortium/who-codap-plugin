@@ -99,7 +99,7 @@ export const App = () => {
             dataStatus === "incomplete" && <div className="incomplete"><WarningIcon /> Some data requested are not available</div>
           }
         </div>
-        <button onClick={handleCreateData} disabled={getDataDisabled}>Get Data</button>
+        <button onClick={handleCreateData} disabled={getDataDisabled} data-testid="who-get-data-button">Get Data</button>
       </div>
       {
         infoVisible && <InfoModal onClose={handleInfoClick} />
